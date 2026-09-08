@@ -1553,7 +1553,21 @@ function triggerRedirect() {
     }, 1500);
 }
 
-function closePop(){ document.getElementById("fullscreen-loader").style.display="none"; }
+function closePop(){
+  clearInterval(timerInterval);
+  document.getElementById("fullscreen-loader").style.display = "none";
+  document.getElementById("portal-switch").style.display = "none";
+  document.getElementById("btn").disabled = false;
+  document.getElementById("bar").style.width = "0%";
+  document.getElementById("timer").style.display = "none";
+  document.getElementById("user").value = "";
+  document.body.style.background = "var(--bg-dark)";
+  document.body.classList.remove("shake-effect");
+  document.getElementById("danger-banner").style.display = "none";
+  soundAlarm.pause();
+  soundAlarm.currentTime = 0;
+  isAlarming = false;
+}
 </script>
 
 
