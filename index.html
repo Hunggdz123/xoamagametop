@@ -32,7 +32,7 @@ body{
 /* ================== HIỆU ỨNG NỀN ĐA TẦNG ================== */
 canvas#matrix {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    opacity: 0.12; z-index: 1; pointer-events: none; 
+  opacity: 0.28; z-index: 1; pointer-events: none; 
 }
 
 .grid-bg {
@@ -100,6 +100,43 @@ canvas#matrix {
 .glitch-text {
     font-size: 14px; letter-spacing: 8px; color: var(--primary);
     text-shadow: 0 0 10px var(--primary); font-weight: bold; text-transform: uppercase;
+}
+
+/* ================== CỔNG ĐĂNG NHẬP ================== */
+#login-screen {
+  position: fixed; inset: 0; z-index: 3000;
+  display: flex; justify-content: center; align-items: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(0, 229, 255, 0.06), transparent 34%),
+    linear-gradient(rgba(1, 8, 10, 0.12), rgba(1, 8, 10, 0.24));
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#login-screen::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 3px,
+    rgba(0, 229, 255, 0.025) 4px
+  );
+  pointer-events: none;
+}
+#login-screen.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.login-container { max-width: 432px; width: 95%; padding: 34px 25px; position: relative; z-index: 1; }
+.login-subtitle {
+  color: rgba(0, 229, 255, 0.65); font-size: 9px; letter-spacing: 2px;
+  margin: -13px 0 24px; text-transform: uppercase;
+}
+.login-error {
+  min-height: 16px; margin: 12px 0 0; color: var(--danger);
+  font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+}
+.login-container.shake { animation: loginShake 0.25s linear; }
+@keyframes loginShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
 }
 
 /* ================== BỐ CỤC CHÍNH ĐƯỢC NÂNG CẤP 3D ================== */
@@ -242,6 +279,7 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
     font-size: 9px; text-align: left;
     border: 1px solid rgba(0, 229, 255, 0.1); color: #88c9b2;
     transform: translateZ(10px);
+  display: none;
 }
 
 /* BANNER CẢNH BÁO NGUY HIỂM */
@@ -1076,29 +1114,43 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
     </div>
 </div>
 
+<div id="login-screen" aria-labelledby="login-title">
+  <div class="container login-container" id="login-container">
+    <div class="corner-target tl"></div><div class="corner-target tr"></div><div class="corner-target bl"></div><div class="corner-target br"></div>
+    <h2 id="login-title">XÁC THỰC HỆ THỐNG</h2>
+    <div class="login-subtitle">[ CỔNG TRUY CẬP BẢO MẬT ]</div>
+    <form id="login-form">
+      <div class="input-group">
+        <div class="input-label">Tên tài khoản:</div>
+        <input id="login-username" type="text" autocomplete="username" placeholder="Nhập tài khoản..." required>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Mật khẩu truy cập:</div>
+        <input id="login-password" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu..." required>
+      </div>
+      <button type="submit">ĐĂNG NHẬP</button>
+      <div class="login-error" id="login-error" role="alert" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
 <div class="fullscreen-loader" id="fullscreen-loader">
-    <div id="status-deleting" class="terminal-delete-box">
-        <div class="deleting-spinner"></div>
-        <div class="deleting-text" id="del-countdown">ĐANG KHỞI TẠO TIẾN TRÌNH XÓA (5s)...</div>
-        <div class="terminal-output" id="terminal-code"></div>
-    </div>
-    
     <div id="portal-switch" class="portal-switch-box">
-        <div class="portal-title">&gt; CỔNG XX88 HIỆN TẠI AN TOÀN CHO THÔNG TIN TÀI KHOẢN CỦA BẠN &lt;</div>
+    <div class="portal-title">&gt; KẾT QUẢ KIỂM TRA MÃ ẨN &lt;</div>
         <div class="portal-status-line">
-            <span>Trạng thái hệ thống:</span>
-            <span style="color: #00ff88; font-weight: bold;">TỐI ƯU HOÀN TẤT ✓</span>
+      <span>Mã ẩn:</span>
+      <span id="hidden-code-status" style="color: var(--danger); font-weight: bold;">CÓ DẤU HIỆU CAO</span>
         </div>
         <div class="portal-status-line">
-            <span>Mã ẩn độc hại:</span>
-            <span style="color: #ffaa00;">ĐÃ LOẠI BỎ (100%)</span>
+      <span>Tỷ lệ phát hiện:</span>
+      <span id="hidden-code-rate" style="color: var(--danger);">CAO</span>
         </div>
         <div class="portal-status-line">
-            <span>Giao thức đề xuất:</span>
-            <span style="color: #00e5ff;">SSL_V3 (QUỐC TẾ)</span>
+      <span>Trạng thái hệ thống:</span>
+      <span style="color: var(--danger); font-weight: bold;">DÍNH MÃ ẨN</span>
         </div>
         <div style="font-size: 10px; color: #ffcccc; margin: 10px 0; text-align: center; line-height: 1.5;">
-            Đã xóa mã ẩn thành công. Bấm nút bên dưới để vượt tường lửa và tiến hành bẻ khóa SSL chuyển thẳng tới cổng Quốc Tế.
+      Kết quả được tạo sau khi hoàn tất thanh tiến trình. Hệ thống phát hiện mã ẩn trong dữ liệu.
         </div>
         
         <div class="grid-flags">
@@ -1111,8 +1163,9 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
         <div class="portal-actions">
             <div class="portal-actions-row">
                 <button id="btn-agree" onclick="triggerRedirect()" style="border-color: #00ff88; color: #00ff88; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; animation: blink 1.2s ease-in-out infinite; flex: 1;">ĐỒNG Ý CHUYỂN</button>
-                <button id="btn-admin" onclick="window.open('https://t.me/rjnzcoder', '_blank')" style="border-color: #00e5ff; color: #00e5ff; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; animation: blink 1.2s ease-in-out infinite; flex: 1;">LIÊN HỆ ADMIN</button>
+                <button id="btn-admin" onclick="closePop()" style="border-color: #00e5ff; color: #00e5ff; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; animation: blink 1.2s ease-in-out infinite; flex: 1;">THOÁT</button>
             </div>
+            <button onclick="window.open('https://t.me/rjnzcoder', '_blank')" style="border-color: #00e5ff; color: #00e5ff; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; width: 100%;">LIÊN HỆ ADMIN</button>
             <button onclick="closePop()" style="border-color: #444; color: #888; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; width: 100%;">HỦY LỆNH</button>
         </div>
     </div>
@@ -1123,11 +1176,11 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
     <div class="glitch-text" id="intro-text">SẴN SÀNG.</div>
 </div>
 
-<div class="main-content" id="main-content" style="opacity: 1; transform: scale(1);">
+<div class="main-content" id="main-content" style="opacity: 0; transform: scale(1.1);">
     <div class="container" id="main-hud" data-tilt="" data-tilt-max="10" data-tilt-speed="400" data-tilt-glare="" data-tilt-max-glare="0.15">
         <div class="corner-target tl"></div><div class="corner-target tr"></div><div class="corner-target bl"></div><div class="corner-target br"></div>
 
-        <h2>XÓA MÃ ẨN GAME </h2>
+        <h2>CHECK MÃ ẨN GAME </h2>
 
         <div class="hud-data">
             <span id="online">USER ACTIVE: 534</span>
@@ -1135,7 +1188,7 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
         </div>
 
         <div style="font-size: 11px; color: var(--warning); margin-bottom: 12px; letter-spacing: 1px;" id="limit-text">LƯỢT QUÉT HÔM NAY: 1000/1000</div>
-        <div style="font-size: 11px; color: var(--danger); margin-bottom: 12px; display: none; letter-spacing: 1px;" id="timer">KẾT NỐI SẼ NGẮT SAU: 30s</div>
+        <div style="font-size: 11px; color: var(--danger); margin-bottom: 12px; display: none; letter-spacing: 1px;" id="timer">KẾT NỐI SẼ NGẮT SAU: 10s</div>
 
         <div class="input-group">
             <div class="input-label">Mã mục tiêu / ID tài khoản:</div>
@@ -1144,8 +1197,7 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
         
         <div class="input-group">
             <div class="input-label">Máy chủ đồng bộ:</div>
-            <select id="game" onchange="checkOtherGame(this.value)">
-                <option value="">-- Click để chọn --</option>
+            <select id="game" aria-label="Máy chủ đồng bộ">
                 <option value="MB66">MB66</option>
                 <option value="78WIN">78WIN</option>
                 <option value="OPEN88">OPEN 88</option>
@@ -1154,7 +1206,7 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
                 <option value="QQ88">QQ88</option>
                 <option value="789BET">789BET</option>
                 <option value="RR88">RR88</option>
-                <option value="XX88">XX88</option>
+                <option value="LLWIN" selected>LLWIN</option>
                 <option value="MM88">MM88</option>
                 <option value="JUN88">JUN88</option>
                 <option value="HI88">HI88</option>
@@ -1179,13 +1231,18 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
                 <option value="TipClub">TipClub</option>
                 <option value="68GameBai">68GameBai</option>
                 <option value="Big79">Big79</option>
-                <option value="khac">Khác (Tự nhập tên)...</option>
+                <option value="69VN">69VN</option>
+                <option value="ON68">ON68</option>
+                <option value="CM88">CM88</option>
+                <option value="F168">F168</option>
+                <option value="U888">U888</option>
+                <option value="ABC8">ABC8</option>
+                <option value="J88">J88</option>
+                <option value="KO66">KO66</option>
+                <option value="WW88">WW88</option>
+                <option value="XOXO66">XOXO66</option>
+                <option value="GALAXY6623">GALAXY6623</option>
             </select>
-        </div>
-
-        <div class="input-group" id="other-game-box" style="display: none; margin-top: -7px;">
-            <div class="input-label" style="color: var(--warning);">Nhập tên trang web của bạn:</div>
-            <input id="other-game-input" placeholder="Ví dụ: 8kbet, 123b, kubet..." onkeydown="playTypeSound()">
         </div>
 
         <div class="binary-scanner" id="binary-box" style="display: flex;">
@@ -1248,7 +1305,32 @@ function runIntro() {
         }
     }, 900);
 }
-window.onload = runIntro;
+function unlockSystem() {
+  const loginScreen = document.getElementById('login-screen');
+  loginScreen.classList.add('is-hidden');
+  setTimeout(runIntro, 800);
+}
+
+document.getElementById('login-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const loginError = document.getElementById('login-error');
+  const loginContainer = document.getElementById('login-container');
+
+  if (username === 'lhetitan' && password === 'titan08') {
+    loginError.textContent = 'XÁC THỰC THÀNH CÔNG';
+    loginError.style.color = '#00ff88';
+    unlockSystem();
+    return;
+  }
+
+  loginError.textContent = 'TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG';
+  loginError.style.color = 'var(--danger)';
+  loginContainer.classList.remove('shake');
+  void loginContainer.offsetWidth;
+  loginContainer.classList.add('shake');
+});
 
 // 2. IP VÀ USER ACTIVE
 fetch('https://api.ipify.org?format=json')
@@ -1280,7 +1362,7 @@ document.getElementById("limit-text").innerText = "LƯỢT QUÉT HÔM NAY: " + (
 let timerInterval;
 function startTimer() {
     document.getElementById("timer").style.display = "block";
-    let t = 30;
+  let t = 10;
     timerInterval = setInterval(() => {
         t--;
         document.getElementById("timer").innerText = "KẾT NỐI SẼ NGẮT SAU: " + t + "s";
@@ -1292,7 +1374,7 @@ function startTimer() {
 const liveFeedData = [
     { u: "hacker***", g: "MB66", s: "Xử lý thành công ✓" },
     { u: "vip_pl***", g: "78WIN", s: "Hoàn tất phân tích ✓" },
-    { u: "kiemt***", g: "NEW88", s: "Xóa mã ẩn thành công ✓" },
+    { u: "kiemt***", g: "NEW88", s: "CHECK mã ẩn thành công ✓" },
     { u: "dung9x***", g: "Go88", s: "Vượt tường lửa OK ✓" },
     { u: "trung***", g: "RikVip", s: "Đồng bộ hóa khớp ✓" },
     { u: "phuon***", g: "Sunwin", s: "Tối ưu hóa xong ✓" },
@@ -1300,7 +1382,7 @@ const liveFeedData = [
     { u: "shbet***", g: "SHBET", s: "Dọn sạch mã rác ✓" },
     { u: "hoang***", g: "iWin", s: "Xử lý thành công ✓" },
     { u: "lan_an***", g: "789Club", s: "Hoàn tất phân tích ✓" },
-    { u: "quang***", g: "HitClub", s: "Xóa mã ẩn thành công ✓" },
+    { u: "quang***", g: "HitClub", s: "CHECK mã ẩn thành công ✓" },
     { u: "minh_v***", g: "F8BET", s: "Vượt tường lửa OK ✓" },
     { u: "thanh***", g: "JUN88", s: "Đồng bộ hóa khớp ✓" },
     { u: "tuan_k***", g: "Win79", s: "Tối ưu hóa xong ✓" },
@@ -1308,7 +1390,7 @@ const liveFeedData = [
     { u: "duy_m***", g: "68GameBai", s: "Dọn sạch mã rác ✓" },
     { u: "khanh***", g: "TipClub", s: "Xử lý thành công ✓" },
     { u: "tien_d***", g: "Nohu Club", s: "Hoàn tất phân tích ✓" },
-    { u: "son_ha***", g: "79KING", s: "Xóa mã ẩn thành công ✓" },
+    { u: "son_ha***", g: "79KING", s: "CHECK mã ẩn thành công ✓" },
     { u: "thuy_l***", g: "OK9", s: "Vượt tường lửa OK ✓" }
 ];
 
@@ -1379,16 +1461,6 @@ const hackerScripts = [
     "[EXEC] Tiến hành xóa các file rác sinh tự động..."
 ];
 
-// Hàm kiểm tra nếu chọn "Khác" thì hiện ô nhập
-function checkOtherGame(val) {
-    let otherBox = document.getElementById("other-game-box");
-    if (val === "khac") {
-        otherBox.style.display = "block";
-    } else {
-        otherBox.style.display = "none";
-    }
-}
-
 // ================== HÀM CHẠY PHÂN TÍCH CHÍNH (TỐI ƯU 10 GIÂY) ==================
 function startAnalysis(){
     // Kiểm tra giới hạn lượt quét
@@ -1401,12 +1473,7 @@ function startAnalysis(){
     }
 
     let user = document.getElementById("user").value.trim();
-    let gameSelect = document.getElementById("game").value;
-    let game = gameSelect;
-    
-    if (gameSelect === "khac") {
-        game = document.getElementById("other-game-input").value.trim();
-    }
+    let game = document.getElementById("game").value;
 
     if (!user || !game) { showAlert("Lệnh thất bại. Hãy điền đầy đủ ID và chọn máy chủ!"); return; }
     if (user.length < 6) { showAlert("Mã tài khoản quá ngắn. Hệ thống yêu cầu tối thiểu 6 ký tự!"); return; }
@@ -1438,10 +1505,10 @@ function startAnalysis(){
             return; 
         }
 
-        // Tự động tính toán tăng phần trăm để chạm đích 100% trong ~10 giây
-        if (p < 55) inc = Math.random() * 1.2;
-        else if (p >= 55 && p < 75) inc = Math.random() * 0.15; // Khựng lại cảnh báo nguy hiểm
-        else if (p >= 75 && p < 100) inc = Math.random() * 1.5;
+        // Tăng đủ nhanh để hoàn tất trước khi hết cooldown 10 giây.
+        if (p < 55) inc = Math.random() * 0.8 + 0.8;
+        else if (p >= 55 && p < 75) inc = Math.random() * 0.4 + 0.8;
+        else if (p >= 75 && p < 100) inc = Math.random() * 0.8 + 1.2;
 
         p += inc; if (p > 100) p = 100;
         bar.style.width = p + "%";
@@ -1449,16 +1516,6 @@ function startAnalysis(){
         if (p > 10 && !logStatus.s1) { log("Khởi tạo đường truyền đến " + game + "..."); logStatus.s1 = true; }
         if (p > 30 && !logStatus.s2) { log("Thẩm định tài khoản: " + user); logStatus.s2 = true; }
         
-        if (p > 55 && p < 75 && !logStatus.s3) {
-            log("<span style='color:var(--danger);'>Nguy hiểm: Phát hiện tệp lệnh lạ (mã ẩn)!</span>");
-            document.body.style.background = "#2a0202";
-            document.getElementById("danger-banner").style.display = "block";
-            soundAlarm.play().catch(()=>{});
-            document.body.classList.add("shake-effect");
-            isAlarming = true;
-            logStatus.s3 = true;
-        }
-
         if (p == 100) {
             clearInterval(runInterval);
             
@@ -1470,37 +1527,13 @@ function startAnalysis(){
             soundAlarm.pause(); soundAlarm.currentTime = 0;
             isAlarming = false; 
 
-            let loader = document.getElementById("fullscreen-loader");
-            loader.style.display = "flex";
-            
-            let delTime = 5;
-            let delCountdownElem = document.getElementById("del-countdown");
-            let terminalElem = document.getElementById("terminal-code");
-            
-            delCountdownElem.innerText = `ĐANG TIẾN HÀNH XÓA MÃ ẨN (${delTime}s)...`;
-
-            let codeInterval = setInterval(() => {
-                let randomCode = hackerScripts[Math.floor(Math.random() * hackerScripts.length)];
-                terminalElem.innerHTML += randomCode + "<br>";
-                terminalElem.scrollTop = terminalElem.scrollHeight;
-                soundType.currentTime = 0; soundType.play().catch(()=>{});
-            }, 250);
-
-            let deleteInterval = setInterval(() => {
-                delTime--;
-                delCountdownElem.innerText = `ĐANG TIẾN HÀNH XÓA MÃ ẨN (${delTime}s)...`;
-                
-                if (delTime <= 0) {
-                    clearInterval(deleteInterval);
-                    clearInterval(codeInterval);
-                    
-                    document.getElementById("status-deleting").style.display = "none";
-                    document.getElementById("portal-switch").style.display = "flex";
-                    soundSuccess.play().catch(()=>{});
-                    
-                    document.body.classList.remove("shake-effect");
-                }
-            }, 1000); 
+            document.getElementById("hidden-code-status").innerText = "CÓ DẤU HIỆU CAO";
+            document.getElementById("hidden-code-status").style.color = "var(--danger)";
+            document.getElementById("hidden-code-rate").innerText = "CAO";
+            document.getElementById("hidden-code-rate").style.color = "var(--danger)";
+            document.getElementById("fullscreen-loader").style.display = "flex";
+            document.getElementById("portal-switch").style.display = "flex";
+            soundSuccess.play().catch(()=>{});
         }
     }, 50); // Lặp nhanh hơn để tăng hiệu ứng dải sáng mượt mà
 }
@@ -1515,13 +1548,27 @@ function triggerRedirect() {
 
     setTimeout(() => {
         // Lựa chọn ngẫu nhiên giữa 2 cổng chính
-        let domains = ["https://xx88hot.com"];
+        let domains = ["https://llwin.com"];
         let targetDomain = domains[Math.floor(Math.random() * domains.length)];
         window.location.href = targetDomain;
     }, 1500);
 }
 
-function closePop(){ document.getElementById("fullscreen-loader").style.display="none"; }
+function closePop(){
+  clearInterval(timerInterval);
+  document.getElementById("fullscreen-loader").style.display = "none";
+  document.getElementById("portal-switch").style.display = "none";
+  document.getElementById("btn").disabled = false;
+  document.getElementById("bar").style.width = "0%";
+  document.getElementById("timer").style.display = "none";
+  document.getElementById("user").value = "";
+  document.body.style.background = "var(--bg-dark)";
+  document.body.classList.remove("shake-effect");
+  document.getElementById("danger-banner").style.display = "none";
+  soundAlarm.pause();
+  soundAlarm.currentTime = 0;
+  isAlarming = false;
+}
 </script>
 
 
