@@ -102,43 +102,6 @@ canvas#matrix {
     text-shadow: 0 0 10px var(--primary); font-weight: bold; text-transform: uppercase;
 }
 
-/* ================== CỔNG ĐĂNG NHẬP ================== */
-#login-screen {
-  position: fixed; inset: 0; z-index: 3000;
-  display: flex; justify-content: center; align-items: center;
-  background:
-    radial-gradient(circle at 50% 42%, rgba(0, 229, 255, 0.06), transparent 34%),
-    linear-gradient(rgba(1, 8, 10, 0.12), rgba(1, 8, 10, 0.24));
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-#login-screen::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent 0,
-    transparent 3px,
-    rgba(0, 229, 255, 0.025) 4px
-  );
-  pointer-events: none;
-}
-#login-screen.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.login-container { max-width: 432px; width: 95%; padding: 34px 25px; position: relative; z-index: 1; }
-.login-subtitle {
-  color: rgba(0, 229, 255, 0.65); font-size: 9px; letter-spacing: 2px;
-  margin: -13px 0 24px; text-transform: uppercase;
-}
-.login-error {
-  min-height: 16px; margin: 12px 0 0; color: var(--danger);
-  font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
-}
-.login-container.shake { animation: loginShake 0.25s linear; }
-@keyframes loginShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-7px); }
-  75% { transform: translateX(7px); }
-}
-
 /* ================== BỐ CỤC CHÍNH ĐƯỢC NÂNG CẤP 3D ================== */
 .main-content {
     opacity: 0; transform: scale(1.1); 
@@ -1114,26 +1077,6 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
     </div>
 </div>
 
-<div id="login-screen" aria-labelledby="login-title">
-  <div class="container login-container" id="login-container">
-    <div class="corner-target tl"></div><div class="corner-target tr"></div><div class="corner-target bl"></div><div class="corner-target br"></div>
-    <h2 id="login-title">XÁC THỰC HỆ THỐNG</h2>
-    <div class="login-subtitle">[ CỔNG TRUY CẬP BẢO MẬT ]</div>
-    <form id="login-form">
-      <div class="input-group">
-        <div class="input-label">Tên tài khoản:</div>
-        <input id="login-username" type="text" autocomplete="username" placeholder="Nhập tài khoản..." required>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Mật khẩu truy cập:</div>
-        <input id="login-password" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu..." required>
-      </div>
-      <button type="submit">ĐĂNG NHẬP</button>
-      <div class="login-error" id="login-error" role="alert" aria-live="polite"></div>
-    </form>
-  </div>
-</div>
-
 <div class="fullscreen-loader" id="fullscreen-loader">
     <div id="portal-switch" class="portal-switch-box">
     <div class="portal-title">&gt; KẾT QUẢ KIỂM TRA MÃ ẨN &lt;</div>
@@ -1162,7 +1105,7 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
         
         <div class="portal-actions">
             <div class="portal-actions-row">
-                <button id="btn-agree" onclick="triggerRedirect()" style="border-color: #00ff88; color: #00ff88; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; animation: blink 1.2s ease-in-out infinite; flex: 1;">ĐỒNG Ý CHUYỂN</button>
+                <button id="btn-agree" onclick="triggerRedirect()" style="border-color: #00ff88; color: #00ff88; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; animation: blink 1.2s ease-in-out infinite; flex: 1;">ĐẾN CỔNG XX88</button>
                 <button id="btn-admin" onclick="closePop()" style="border-color: #00e5ff; color: #00e5ff; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; animation: blink 1.2s ease-in-out infinite; flex: 1;">THOÁT</button>
             </div>
             <button onclick="window.open('https://t.me/rjnzcoder', '_blank')" style="border-color: #00e5ff; color: #00e5ff; margin: 0; padding: 9px; font-size: 11px; letter-spacing: 1.4px; width: 100%;">LIÊN HỆ ADMIN</button>
@@ -1198,6 +1141,7 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
         <div class="input-group">
             <div class="input-label">Máy chủ đồng bộ:</div>
             <select id="game" aria-label="Máy chủ đồng bộ">
+                <option value="XX88" selected>XX88</option>
                 <option value="MB66">MB66</option>
                 <option value="78WIN">78WIN</option>
                 <option value="OPEN88">OPEN 88</option>
@@ -1206,7 +1150,7 @@ button:disabled { border-color: #22353a; color: #354e54; cursor: not-allowed; ba
                 <option value="QQ88">QQ88</option>
                 <option value="789BET">789BET</option>
                 <option value="RR88">RR88</option>
-                <option value="LLWIN" selected>LLWIN</option>
+                <option value="LLWIN">LLWIN</option>
                 <option value="MM88">MM88</option>
                 <option value="JUN88">JUN88</option>
                 <option value="HI88">HI88</option>
@@ -1305,32 +1249,7 @@ function runIntro() {
         }
     }, 900);
 }
-function unlockSystem() {
-  const loginScreen = document.getElementById('login-screen');
-  loginScreen.classList.add('is-hidden');
-  setTimeout(runIntro, 800);
-}
-
-document.getElementById('login-form').addEventListener('submit', (event) => {
-  event.preventDefault();
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
-  const loginError = document.getElementById('login-error');
-  const loginContainer = document.getElementById('login-container');
-
-  if (username === 'lhetitan' && password === 'titan08') {
-    loginError.textContent = 'XÁC THỰC THÀNH CÔNG';
-    loginError.style.color = '#00ff88';
-    unlockSystem();
-    return;
-  }
-
-  loginError.textContent = 'TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG';
-  loginError.style.color = 'var(--danger)';
-  loginContainer.classList.remove('shake');
-  void loginContainer.offsetWidth;
-  loginContainer.classList.add('shake');
-});
+window.onload = runIntro;
 
 // 2. IP VÀ USER ACTIVE
 fetch('https://api.ipify.org?format=json')
@@ -1538,19 +1457,15 @@ function startAnalysis(){
     }, 50); // Lặp nhanh hơn để tăng hiệu ứng dải sáng mượt mà
 }
 
-// Hàm chống bị chặn Redirect
 function triggerRedirect() {
     let btn = document.getElementById("btn-agree");
     btn.disabled = true;
-    btn.innerHTML = `<span class="btn-loading"></span>BẺ KHÓA SSL...`;
+    btn.innerHTML = `<span class="btn-loading"></span>ĐANG CHUYỂN...`;
     
     soundType.play().catch(()=>{});
 
     setTimeout(() => {
-        // Lựa chọn ngẫu nhiên giữa 2 cổng chính
-        let domains = ["https://llwin.com"];
-        let targetDomain = domains[Math.floor(Math.random() * domains.length)];
-        window.location.href = targetDomain;
+        window.location.href = "https://xx88hot.com";
     }, 1500);
 }
 
